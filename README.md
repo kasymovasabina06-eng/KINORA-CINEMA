@@ -6,7 +6,7 @@
 
 ## Запуск Windows / PyCharm
 
-Открой папку **CinemaWave** в PyCharm (внутри лежит `manage.py`). Терминал открывай в этой же папке.
+Открой папку KINORA_Cinematic в PyCharm (внутри находится файл manage.py). Терминал открывай в этой же папке.
 
 ```powershell
 py -3.12 -m venv .venv
@@ -41,3 +41,23 @@ py -3.12 -m venv .venv
 - Для production: выставить `DJANGO_SECRET_KEY`, `DJANGO_DEBUG=0`, `DJANGO_ALLOWED_HOSTS` и настроить HTTPS, постоянное хранилище статики, рабочую БД и сервис платежей.
 
 **Права на фильмы, постеры и марки принадлежат правообладателям.** Проект не аффилирован с кинотеатрами или студиями.
+## ER-диаграмма базы данных KINORA
+
+Диаграмма показывает связи между основными моделями приложения.
+
+```mermaid
+erDiagram
+    GENRE ||--o{ MOVIE : contains
+    CINEMA ||--o{ HALL : has
+    MOVIE ||--o{ SHOWTIME : scheduled
+    HALL ||--o{ SHOWTIME : hosts
+
+    USER ||--o| PROFILE : owns
+    PROFILE }o--o{ MOVIE : favorites
+
+    USER ||--o{ BOOKING : makes
+    SHOWTIME ||--o{ BOOKING : receives
+
+    BOOKING ||--o{ BOOKING_SEAT : includes
+    SHOWTIME ||--o{ BOOKING_SEAT : reserves
+```   
