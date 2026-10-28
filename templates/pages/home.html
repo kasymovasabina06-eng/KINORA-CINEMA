@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Главная{% endblock %}
+{% block content %}
+<section class="cinema-hero">
+  <div class="cinema-hero-photo" {% if hero and hero.poster %}style="--hero-image:url('{{ hero.poster }}')"{% endif %}></div>
+  <div class="wrap cinema-hero-inner">
+    <div class="hero-copy">
+      <div class="hero-overline"><span class="live-dot"></span> НАСТОЯЩИЕ ИСТОРИИ. БОЛЬШОЙ ЭКРАН.</div>
+      <div class="hero-index">KINORA ORIGINAL EXPERIENCE <span>01 / CINEMA</span></div>
+      <h1>Кино,<br>которое <em>чувствуешь.</em></h1>
+      <p>От премьер до любимой классики. Найди свой фильм, выбери сеанс и место — остальное мы сделали удобным.</p>
+      <div class="hero-actions"><a class="cta" href="{% url 'movies:list' %}">Выбрать фильм <span>↗</span></a><a class="ghost" href="{% url 'movies:upcoming' %}">Скоро в кино <span>→</span></a></div>
+      <div class="hero-highlights"><span>✦ УДОБНЫЙ ВЫБОР МЕСТ</span><span>✦ БИЛЕТ С QR</span><span>✦ БИШКЕК</span></div>
+    </div>
+    {% if hero %}<a class="feature-float" href="{% url 'movies:detail' hero.id %}"><span>В ФОКУСЕ</span><strong>{{ hero.title }}</strong><small>★ {{ hero.rating }} &nbsp; / &nbsp; {{ hero.year }} &nbsp; / &nbsp; Подробнее ↗</small></a>{% endif %}
+  </div>
+  <div class="hero-pagination"><div class="wrap"><span>01</span><div class="hero-progress"><i></i></div><span>КИНО — ЭТО ЭМОЦИИ</span></div></div>
+</section>
+<div class="ticker"><div class="wrap">СЕАНСЫ В БИШКЕКЕ <b>✦</b> ВЫБЕРИ СВОЮ ИСТОРИЮ <b>✦</b> БИЛЕТЫ В ПАРУ КЛИКОВ <b>✦</b> КИНО НАЧИНАЕТСЯ ЗДЕСЬ</div></div>
+<section class="wrap section" id="now"><div class="section-top"><div><div class="eyebrow">01 &nbsp;/&nbsp; КИНОАФИША</div><h2>Сейчас <em>на экране</em></h2><p class="section-descr">Истории, ради которых стоит выйти из дома.</p></div><a class="arrow-link" href="{% url 'movies:list' %}">Смотреть всю афишу <span>↗</span></a></div>
+<div class="film-grid">{% for movie in movies %}{% include 'includes/movie_card.html' %}{% empty %}<div class="notice">Фильмы скоро появятся в афише.</div>{% endfor %}</div></section>
+<section class="wide-feature"><div class="wrap wide-feature-inner"><div class="feature-tag">KINORA / ТВОЙ БИЛЕТ</div><h2>Твой следующий<br><em>любимый момент.</em></h2><p>Выбирай фильм. Найди удобный сеанс. Забронируй место. Получи билет с QR-кодом после оплаты.</p><a class="cta cta-inverse" href="{% url 'movies:list' %}">Найти сеанс <span>↗</span></a><span class="feature-giant">K.</span></div></section>
+<section class="wrap section" id="coming"><div class="section-top"><div><div class="eyebrow">02 &nbsp;/&nbsp; НА ГОРИЗОНТЕ</div><h2>Скоро <em>в кино</em></h2><p class="section-descr">Большие премьеры ещё впереди. Уже есть что ждать.</p></div><a class="arrow-link" href="{% url 'movies:upcoming' %}">Все премьеры <span>↗</span></a></div><div class="film-grid">{% for movie in upcoming %}{% include 'includes/movie_card.html' %}{% empty %}<div class="notice">Ожидаемые премьеры скоро появятся.</div>{% endfor %}</div><p class="muted disclaimer">Даты премьер и кинопрокат в Бишкеке могут различаться. Бронирование ожидаемых фильмов отключено.</p></section>
+<section class="wrap journey-section"><div class="eyebrow">03 &nbsp;/&nbsp; ВСЁ ПРОСТО</div><h2>От постера <em>до билета.</em></h2><div class="journey"><div><span>01</span><strong>Найди фильм</strong><p>Выбирай по жанру, названию или актёру.</p></div><div><span>02</span><strong>Выбери сеанс</strong><p>Кинотеатр, зал, дата и удобное время.</p></div><div><span>03</span><strong>Займи место</strong><p>Наглядная схема и актуальная занятость.</p></div><div><span>04</span><strong>Получи QR</strong><p>Ваш электронный билет будет доступен в профиле.</p></div></div></section>
+<section class="wrap locations"><div><div class="eyebrow">04 &nbsp;/&nbsp; ВЫБИРАЙ БЛИЖЕ</div><h2>Кино в <em>твоём городе.</em></h2><p>Выбирайте удобную площадку и подходящее время.</p></div><div class="location-tags"><span>↗ Дордой Плаза</span><span>↗ Томми Молл</span><span>↗ Азия Молл</span></div></section>
+{% endblock %}

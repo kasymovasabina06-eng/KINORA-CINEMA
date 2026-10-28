@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}{{ movie.title }} — KINORA{% endblock %}
+{% block content %}
+<section class="movie-cinematic" {% if movie.poster %}style="--movie-backdrop:url('{{ movie.poster }}')"{% endif %}>
+  <div class="wrap movie-cinematic-inner">
+    <a class="movie-back" href="{% url 'movies:list' %}">← Вся афиша</a>
+    <div class="movie-cinematic-layout">
+      <div class="movie-cinematic-poster">{% if movie.poster %}<img src="{{ movie.poster }}" alt="Постер: {{ movie.title }}">{% endif %}</div>
+      <div class="movie-cinematic-copy">
+        <div class="cinema-overline">{{ movie.genre.name|upper }} &nbsp; / &nbsp; {{ movie.year }} &nbsp; / &nbsp; {{ movie.age }}</div>
+        <h1>{{ movie.title }}</h1>
+        <p class="original-name">{{ movie.original_title }}</p>
+        <div class="movie-kpis"><span>★ {{ movie.rating }}</span><span>{{ movie.duration }} мин.</span><span>{{ movie.genre.name }}</span></div>
+        <h2>О фильме</h2>
+        <p class="movie-synopsis">{{ movie.description }}</p>
+        <div class="movie-credits"><div><small>РЕЖИССЁР</small><strong>{{ movie.director|default:'Не указан' }}</strong></div><div><small>В РОЛЯХ / ОЗВУЧИВАНИЕ</small><strong>{{ movie.actors|default:'Информация уточняется' }}</strong></div></div>
+        <div class="film-actions">
+          {% if movie.trailer %}<a class="film-trailer" href="{{ movie.trailer }}" target="_blank" rel="noopener noreferrer">▶ Трейлер на YouTube ↗</a>{% endif %}
+          {% if not movie.is_upcoming %}<a class="film-book" href="#sessions">Выбрать сеанс ↓</a>{% endif %}
+          {% if user.is_authenticated %}<form method="post" action="{% url 'booking:favorite' movie.id %}">{% csrf_token %}<button class="film-save" type="submit">♡ В избранное</button></form>{% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% if user.is_authenticated and user.is_staff %}<div class="wrap admin-actions"><a class="outline-btn" href="{% url 'movies:update' movie.id %}">Изменить фильм</a><a class="outline-btn" href="{% url 'movies:delete' movie.id %}">Удалить</a></div>{% endif %}
+<section class="wrap session-section" id="sessions">
+  <div class="eyebrow">КИНОТЕАТР • ДАТА • ВРЕМЯ</div><h2>Выбрать <em>сеанс</em></h2>
+  {% if movie.is_upcoming %}
+    <div class="showtime-empty">Скоро в кино{% if movie.release_date %} · Премьера: {{ movie.release_date|date:'d.m.Y' }}{% endif %}. Расписание появится ближе к выходу.</div>
+  {% else %}
+    <form class="schedule-filters" method="get" action="{% url 'movies:detail' movie.id %}#sessions">
+      <label>Дата просмотра<div class="date-tabs">{% for day in dates %}<button type="button" value="{{ day.date|date:'Y-m-d' }}" class="date-tab {% if day.date == chosen_date %}active{% endif %}" onclick="document.getElementById('chosen-day').value=this.value;this.form.submit()">{{ day.label }}<small>{{ day.date|date:'D' }}</small></button>{% endfor %}</div></label>
+      <input type="hidden" name="date" id="chosen-day" value="{{ chosen_date|date:'Y-m-d' }}">
+      <label class="cinema-select">Кинотеатр<select name="cinema" onchange="this.form.submit()"><option value="">Все кинотеатры</option>{% for cinema in cinemas %}<option value="{{ cinema.id }}" {% if chosen_cinema == cinema.id|stringformat:'s' %}selected{% endif %}>{{ cinema.name }}</option>{% endfor %}</select></label>
+    </form>
+    <div class="showtime-results"><div class="session-date-heading">Сеансы на {{ chosen_date|date:'d.m.Y' }}</div>
+    {% for show in showtimes %}
+      <div class="showtime-line"><div class="session-venue"><strong>{{ show.hall.cinema.name }}</strong><span>{{ show.hall.name }}</span></div><div class="session-time">{{ show.starts_at|date:'H:i' }}</div><span class="session-price">от {{ show.price }} сом</span><a class="session-button" href="{% url 'booking:seats' show.id %}">Выбрать места ↗</a></div>
+    {% empty %}<div class="showtime-empty">На выбранную дату и площадку сеансов нет. Выбери другую дату или кинотеатр.</div>{% endfor %}
+    </div>
+    <p class="schedule-note">Время и цены приведены для демонстрации оформления билетов и не являются расписанием реальных кинотеатров.</p>
+  {% endif %}
+</section>
+{% endblock %}

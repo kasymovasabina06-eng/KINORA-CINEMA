@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block title %}Удалить фильм{% endblock %}{% block content %}
+<section class="wrap content narrow"><h1>Удалить фильм?</h1><p>«{{ movie.title }}» будет удалён из каталога. Это действие необратимо.</p><form method="post">{% csrf_token %}<button class="cta">Да, удалить</button><a class="light-btn" href="{% url 'movies:detail' movie.id %}">Отмена</a></form></section>{% endblock %}

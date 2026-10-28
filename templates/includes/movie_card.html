@@ -1,0 +1,11 @@
+<a class="movie-card" href="{% url 'movies:detail' movie.id %}">
+  <div class="poster">
+    {% if movie.poster %}<img src="{{ movie.poster }}" alt="Постер: {{ movie.title }}" loading="lazy" onerror="this.style.display='none'">{% endif %}
+    <span class="poster-fallback">{{ movie.title }}</span>
+    <span class="film-label {% if movie.is_upcoming %}soon{% endif %}">{% if movie.is_upcoming %}СКОРО{% else %}В АФИШЕ{% endif %}</span>
+    <span class="poster-arrow" aria-hidden="true">↗</span>
+    <div class="poster-shade"><span>{{ movie.genre.name }}</span>{% if not movie.is_upcoming %}<strong>★ {{ movie.rating }}</strong>{% endif %}</div>
+  </div>
+  <div class="film-row"><h3>{{ movie.title }}</h3><span>{{ movie.year }}</span></div>
+  <p>{{ movie.genre.name }} <span class="meta-dot">·</span> {% if movie.is_upcoming %}Ожидается{% else %}{{ movie.duration }} мин{% endif %}</p>
+</a>

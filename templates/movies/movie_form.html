@@ -1,0 +1,2 @@
+{% extends 'base.html' %}{% block title %}{{ heading }}{% endblock %}{% block content %}
+<section class="wrap content narrow"><div class="eyebrow">ПАНЕЛЬ УПРАВЛЕНИЯ</div><h1>{{ heading }}</h1><form class="kinora-form" method="post">{% csrf_token %}{{ form.non_field_errors }}{% for field in form %}<label>{{ field.label }}{{ field }}{% for error in field.errors %}<span class="error">{{ error }}</span>{% endfor %}</label>{% endfor %}<button class="cta" type="submit">Сохранить фильм →</button></form></section>{% endblock %}

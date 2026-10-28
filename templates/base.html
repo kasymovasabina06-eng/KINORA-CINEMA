@@ -1,0 +1,25 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#151922">
+  <title>{% block title %}KINORA{% endblock %} — афиша кинотеатров</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+  <div class="announcement"><span class="live-dot"></span> KINORA / кино в твоём городе <span class="announce-right">БИШКЕК · ВЫБЕРИ СВОЙ СЕАНС</span></div>
+  <header class="header"><div class="wrap header-inner">
+    <a class="logo" href="{% url 'pages:home' %}" aria-label="Kinora на главную">KIN<span>O</span>RA<span class="logo-dot">✦</span></a>
+    <button class="hamburger" aria-label="Открыть меню" type="button" aria-expanded="false" onclick="let nav=document.querySelector('.header-links');nav.classList.toggle('visible');this.setAttribute('aria-expanded',nav.classList.contains('visible'))">☰</button>
+    <nav class="header-links" aria-label="Главное меню"><a href="{% url 'pages:home' %}">Главная</a><a href="{% url 'movies:list' %}">Афиша</a><a href="{% url 'movies:list' %}?genre=animation">Мультфильмы</a><a href="{% url 'movies:upcoming' %}">Скоро в кино</a><a href="{% url 'pages:about' %}">О нас</a></nav>
+    <div class="header-account">{% if user.is_authenticated %}<a class="small-btn" href="{% url 'booking:profile' %}">◉ {{ user.username|truncatechars:12 }}</a><form action="{% url 'logout' %}" method="post">{% csrf_token %}<button class="light-btn" type="submit">Выйти</button></form>{% else %}<a class="light-btn" href="{% url 'login' %}">Войти</a><a class="small-btn" href="{% url 'booking:signup' %}">Регистрация <span>↗</span></a>{% endif %}</div>
+  </div></header>
+  {% if messages %}<div class="wrap flash">{% for m in messages %}<p class="flash-msg">{{ m }}</p>{% endfor %}</div>{% endif %}
+  <main>{% block content %}{% endblock %}</main>
+  <footer><div class="wrap footer-in"><div><a class="logo" href="{% url 'pages:home' %}">KIN<span>O</span>RA<span class="logo-dot">✦</span></a><p>Больше, чем афиша. Твоя история в кино.</p></div><div class="footer-links"><a href="{% url 'movies:list' %}">Афиша</a><a href="{% url 'movies:upcoming' %}">Премьеры</a><a href="{% url 'pages:contacts' %}">Контакты</a></div><div class="legal-note">БИШКЕК<br>Расписание и оплата доступны в демонстрационном режиме.<br>Билеты не действуют для прохода в реальные кинозалы.</div></div></footer>
+  <script src="{% static 'js/main.js' %}" defer></script>
+</body></html>
